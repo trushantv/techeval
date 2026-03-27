@@ -1,0 +1,65 @@
+name: IaC Pipeline - Terraform
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  TF_VERSION: "1.5.0"
+
+jobs:
+  terraform:
+    name: Terraform Plan & Apply
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+
+      - name: Run Checkov IaC Scan
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: terraform
+          framework: terraform
+          soft_fail: false
+          output_format: cli
+
+      - name: Terraform Plan
+        working-directory: terraform
+        env:
+          TF_VAR_mongodb_password: ${{ secrets.TF_VAR_MONGODB_PASSWORD }}
+          TF_VAR_ssh_key_name: ${{ secrets.TF_VAR_SSH_KEY_NAME }}
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        working-directory: terraform
+        env:
+          TF_VAR_mongodb_password: ${{ secrets.TF_VAR_MONGODB_PASSWORD }}
+          TF_VAR_ssh_key_name: ${{ secrets.TF_VAR_SSH_KEY_NAME }}
+        run: terraform apply -auto-approve tfplan
