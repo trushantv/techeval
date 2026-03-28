@@ -6,11 +6,13 @@ on:
       - main
     paths:
       - 'app/**'
+      - 'k8s/**'
   pull_request:
     branches:
       - main
     paths:
       - 'app/**'
+      - 'k8s/**'
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
