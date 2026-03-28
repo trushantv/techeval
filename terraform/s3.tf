@@ -1,3 +1,11 @@
+# INTENTIONAL WEAKNESS: disable account-level S3 public access block
+resource "aws_s3_account_public_access_block" "main" {
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
 # S3 bucket for MongoDB backups
 # INTENTIONAL WEAKNESS: public read and public listing enabled
 resource "aws_s3_bucket" "mongodb_backups" {
@@ -11,7 +19,8 @@ resource "aws_s3_bucket" "mongodb_backups" {
 
 # INTENTIONAL WEAKNESS: disabling all public access blocks
 resource "aws_s3_bucket_public_access_block" "mongodb_backups" {
-  bucket = aws_s3_bucket.mongodb_backups.id
+  bucket     = aws_s3_bucket.mongodb_backups.id
+  depends_on = [aws_s3_account_public_access_block.main]
 
   block_public_acls       = false
   block_public_policy     = false
