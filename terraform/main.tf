@@ -15,7 +15,7 @@ terraform {
   # S3 backend for remote state - bucket must be created before terraform init
   # Do NOT commit terraform.tfstate to the repo
   backend "s3" {
-    bucket  = "techeval-tf-state"
+    bucket  = "techeval-tf-state-bucket"
     key     = "terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
