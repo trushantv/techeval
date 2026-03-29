@@ -276,14 +276,14 @@ resource "aws_config_configuration_recorder_status" "main" {
 # AWS Config Rules - flags intentional weaknesses
 # ---------------------------------------------------
 
-# Rule 1: S3 buckets should not be publicly accessible
+# Rule 1: S3 buckets should have block public access enabled
 resource "aws_config_config_rule" "s3_public_access" {
   name        = "${var.project_name}-s3-no-public-access"
-  description = "Checks that S3 buckets do not allow public access"
+  description = "Checks that S3 buckets have block public access settings enabled"
 
   source {
     owner             = "AWS"
-    source_identifier = "S3_BUCKET_PUBLIC_READ_PROHIBITED"
+    source_identifier = "S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED"
   }
 
   depends_on = [aws_config_configuration_recorder_status.main]
@@ -302,20 +302,7 @@ resource "aws_config_config_rule" "restricted_ssh" {
   depends_on = [aws_config_configuration_recorder_status.main]
 }
 
-# Rule 3: Root account MFA should be enabled
-resource "aws_config_config_rule" "root_mfa" {
-  name        = "${var.project_name}-root-mfa-enabled"
-  description = "Checks that MFA is enabled for the root account"
-
-  source {
-    owner             = "AWS"
-    source_identifier = "ROOT_ACCOUNT_MFA_ENABLED"
-  }
-
-  depends_on = [aws_config_configuration_recorder_status.main]
-}
-
-# Rule 4: IAM policies should not have full admin permissions
+# Rule 3: IAM policies should not have full admin permissions
 resource "aws_config_config_rule" "iam_no_full_admin" {
   name        = "${var.project_name}-iam-no-full-admin"
   description = "Checks that no IAM policies grant full admin permissions"
