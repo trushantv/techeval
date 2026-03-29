@@ -58,7 +58,7 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         working-directory: terraform
         env:
           TF_VAR_mongodb_password: ${{ secrets.TF_VAR_MONGODB_PASSWORD }}
