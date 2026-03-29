@@ -1,6 +1,8 @@
-# ---------------------------------------------------
-# EC2 IAM Role - INTENTIONAL WEAKNESS: overly permissive
-# ---------------------------------------------------
+resource "aws_iam_service_linked_role" "elb" {
+  aws_service_name = "elasticloadbalancing.amazonaws.com"
+}
+
+
 resource "aws_iam_role" "ec2_role" {
   name = "${var.project_name}-ec2-role"
 
@@ -14,7 +16,6 @@ resource "aws_iam_role" "ec2_role" {
   })
 }
 
-# INTENTIONAL WEAKNESS: EC2 can create/manage VMs and access all S3
 resource "aws_iam_role_policy" "ec2_overly_permissive" {
   name = "${var.project_name}-ec2-permissive-policy"
   role = aws_iam_role.ec2_role.id
