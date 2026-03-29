@@ -14,6 +14,7 @@ resource "aws_iam_policy" "alb_controller" {
           "ec2:AuthorizeSecurityGroupIngress",
           "ec2:RevokeSecurityGroupIngress",
           "ec2:CreateSecurityGroup",
+          "ec2:DeleteSecurityGroup",
           "ec2:CreateTags",
           "ec2:DeleteTags",
           "cognito-idp:DescribeUserPoolClient",
