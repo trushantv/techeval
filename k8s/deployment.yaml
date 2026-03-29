@@ -16,7 +16,7 @@ spec:
       serviceAccountName: techeval-sa
       containers:
         - name: techeval-app
-          image: 730038224500.dkr.ecr.us-east-1.amazonaws.com/techeval-app:latest
+          image: 816069129950.dkr.ecr.us-east-1.amazonaws.com/techeval-app:latest
           ports:
             - containerPort: 5000
           env:
