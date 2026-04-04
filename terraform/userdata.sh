@@ -34,7 +34,7 @@ sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
 # Restart to apply config changes
 systemctl restart mongod
 
-# Install AWS CLI for S3 backups
+# AWS CLI for S3 backups
 apt-get install -y awscli
 
 # Create daily MongoDB backup script

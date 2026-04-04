@@ -5,7 +5,6 @@ metadata:
   namespace: default
 
 ---
-# INTENTIONAL WEAKNESS: cluster-wide admin role assigned to the app
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
